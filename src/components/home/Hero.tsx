@@ -1,9 +1,30 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { Anchor, ArrowRight, MapPin, Ship } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 const Hero = () => {
+  const [activeImage, setActiveImage] = React.useState(0);
+  const [isPaused, setIsPaused] = React.useState(false);
+  const images = [
+    "/assets/image-8.jpg",
+    "/assets/image-2.jpg",
+    "/assets/image-9.jpg",
+    "/assets/image-4.jpg",
+  ];
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setActiveImage((current) => (current + 1) % images.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isPaused, images.length]);
+
   return (
     <div className="relative bg-gradient-to-r from-ocean-900 to-ocean-700 text-white overflow-hidden">
       {/* Background pattern and overlay */}
@@ -29,7 +50,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
               <div className="flex items-center gap-2 text-ocean-100">
                 <MapPin size={18} className="text-ocean-300" />
-                <span>Basé en Polynésie Française</span>
+                <span>Basé en Polynésie Française et à Madagascar</span>
               </div>
               <div className="flex items-center gap-2 text-ocean-100">
                 <Anchor size={18} className="text-ocean-300" />
@@ -39,7 +60,7 @@ const Hero = () => {
 
             <div className="flex flex-wrap gap-4">
               <div>
-                <Link href="/services" className="btn-ocean">
+                <Link href="/services" className="btn-ocean px-6 py-3 border-2">
                   Nos Services <ArrowRight size={20} />
                 </Link>
               </div>
@@ -56,20 +77,51 @@ const Hero = () => {
             data-aos="fade-left"
             data-aos-delay="200"
           >
-            <div className="rounded-lg overflow-hidden shadow-2xl bg-white p-2 relative z-10">
-              <Image
-                src="/assets/image-4.jpg"
-                width={800}
-                height={600}
-                priority
-                alt="Polynésie Française"
-                className="w-full h-auto rounded object-cover"
-              />
+            <div className="rounded-lg overflow-hidden bg-white p-2 relative z-10">
+              {/* Carousel container */}
+              <div
+                className="relative w-full h-[400px]"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+              >
+                {images.map((src, index) => (
+                  <div
+                    key={src}
+                    className="absolute inset-0 transition-opacity duration-1000"
+                    style={{
+                      opacity: index === activeImage ? 1 : 0,
+                    }}
+                  >
+                    <Image
+                      src={src}
+                      fill
+                      priority
+                      alt={`Image ${index + 1}`}
+                      className="object-cover rounded"
+                    />
+                  </div>
+                ))}
+
+                {/* Add navigation dots */}
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                  {images.map((_, index) => (
+                    <button
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                        index === activeImage
+                          ? "bg-white scale-125"
+                          : "bg-white/50"
+                      }`}
+                      onClick={() => setActiveImage(index)}
+                    />
+                  ))}
+                </div>
+              </div>
               <div className="absolute bottom-4 left-4 bg-ocean-600/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
                 <div className="flex items-center gap-2">
                   <Ship size={18} className="text-white" />
                   <span className="text-white font-medium">
-                    Cartographie maritime
+                    Courantologie basé en Polynésie française et à Madagascar
                   </span>
                 </div>
               </div>

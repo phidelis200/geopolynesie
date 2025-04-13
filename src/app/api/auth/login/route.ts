@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    const token = signJwtToken({
+    const token = await signJwtToken({
       id: user.id,
       email: user.email,
       role: user.role,

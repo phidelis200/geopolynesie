@@ -22,10 +22,10 @@ model News {
   id         String   @id @default(cuid())
   title      String
   slug       String   @unique
-  summary    String
   content    String
   image      String?
   date       DateTime @default(now())
+  status     NewStatus @default(PUBLISH)
   readTime   String
   category   String
   authorId   String
@@ -55,4 +55,9 @@ enum ContactStatus {
   PENDING
   PROCESSED
   ARCHIVED
+}
+
+enum NewStatus {
+  PUBLISH
+  DRAFT
 }

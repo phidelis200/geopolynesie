@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Star, Users } from "lucide-react";
+import { Star } from "lucide-react";
 
 const Clients = () => {
   const testimonials = [
@@ -23,15 +25,108 @@ const Clients = () => {
     },
   ];
 
-  const clients = [
-    "Gouvernement de la Polynésie Française",
-    "SHOM (Service Hydrographique et Océanographique de la Marine)",
-    "Direction des Ressources Marines",
-    "Ports Autonomes",
-    "Communes de Polynésie",
-    "Organismes de recherche",
-    "Secteur privé (hôtellerie, immobilier, aquaculture)",
-    "Projets d'infrastructures",
+  type Client = {
+    name: string;
+    logo?: string;
+    text?: string;
+    url?: string;
+  };
+
+  const clients: Client[] = [
+    {
+      name: "FUGRO LADS",
+      logo: "/assets/clients/fugro.avif",
+      url: "https://www.fugro.com",
+    },
+    {
+      name: "Service de l'urbanisme",
+      logo: "/assets/clients/urbanisme.avif",
+      url: "https://www.urbanisme.pf",
+    },
+    {
+      name: "Port Autonome de Papeete",
+      logo: "/assets/clients/port-autonome.avif",
+      url: "https://www.portdepapeete.pf",
+    },
+    {
+      name: "IRD",
+      logo: "/assets/clients/ird.avif",
+      url: "https://www.ird.fr",
+    },
+    {
+      name: "Boyer Travaux Maritimes",
+      logo: "/assets/clients/boyer.avif",
+      url: "https://www.boyer.tm",
+    },
+    { name: "GEOMER", text: "GEOMER", url: "https://www.geomer.fr" },
+    {
+      name: "IFREMER",
+      text: "IFREMER",
+      url: "https://www.ifremer.fr",
+    },
+    {
+      name: "ARVAm",
+      logo: "/assets/clients/arvam.avif",
+      url: "http://www.arvam.com",
+    },
+    {
+      name: "Fenua Environnement",
+      logo: "/assets/clients/fenua.avif",
+      url: "http://www.fenua-environnement.com",
+    },
+    {
+      name: "Pareto",
+      logo: "/assets/clients/paretoec.avif",
+      url: "http://www.paretoec.fr",
+    },
+    {
+      name: "Interoute",
+      logo: "/assets/clients/interoute.avif",
+    },
+    {
+      name: "Le Criobe",
+      logo: "/assets/clients/criobe.avif",
+    },
+    {
+      name: "TIAIMOANA",
+      logo: "/assets/clients/tiaimoana.avif",
+    },
+    {
+      name: "Petrocean",
+      logo: "/assets/clients/petrocean.avif",
+    },
+    {
+      name: "Service Public Polynesie Française",
+      logo: "/assets/clients/spf.avif",
+    },
+    {
+      name: "SUB TECHNOLOGY",
+      logo: "/assets/clients/subtech.avif",
+    },
+    {
+      name: "BAUDRY MARINE",
+      logo: "/assets/clients/baudry.avif",
+    },
+    {
+      name: "PACIFIC",
+      logo: "/assets/clients/pacific.avif",
+    },
+    {
+      name: "Hydroconsult",
+      logo: "/assets/clients/hydroconsult.avif",
+    },
+    {
+      name: "Helimap System",
+      logo: "/assets/clients/helimap.avif",
+    },
+    {
+      name: "MSE GROUP",
+      logo: "/assets/clients/mse.avif",
+    },
+    {
+      name: "Memantic",
+      logo: "/assets/clients/memantic.avif",
+    },
   ];
 
   return (
@@ -66,40 +161,95 @@ const Clients = () => {
           ))}
         </div>
 
-        {/* Client List */}
-        <div className="bg-white rounded-lg p-8" data-aos="fade-up">
-          <div className="flex flex-col md:flex-row items-center mb-8">
-            <div className="mb-6 md:mb-0 md:mr-8">
-              <div className="p-4 bg-ocean-100 rounded-full inline-block">
-                <Users size={32} className="text-ocean-600" />
-              </div>
+        {/* Client Slider */}
+        <div className="relative overflow-hidden" data-aos="fade-up">
+          <div className="slider">
+            <div className="slide-track">
+              {/* First set of clients */}
+              {clients.map((client, index) => (
+                <a
+                  key={`first-${index}`}
+                  href={client.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="slide"
+                >
+                  {client.logo ? (
+                    <img
+                      src={client.logo}
+                      alt={client.name}
+                      className="h-16 w-auto object-contain"
+                    />
+                  ) : (
+                    <span className="text-gray-700 font-bold text-2xl">
+                      {client.text || client.name}
+                    </span>
+                  )}
+                </a>
+              ))}
+              {/* Duplicate set of clients for seamless scrolling */}
+              {clients.map((client, index) => (
+                <a
+                  key={`second-${index}`}
+                  href={client.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="slide"
+                >
+                  {client.logo ? (
+                    <img
+                      src={client.logo}
+                      alt={client.name}
+                      className="h-16 w-auto object-contain"
+                    />
+                  ) : (
+                    <span className="text-gray-700 font-bold text-2xl">
+                      {client.text || client.name}
+                    </span>
+                  )}
+                </a>
+              ))}
             </div>
-            <div>
-              <h3 className="text-2xl font-bold text-ocean-800 mb-2">
-                Ils nous font confiance
-              </h3>
-              <p className="text-gray-600">
-                Depuis 2005, Géopolynésie met son expertise au service de
-                nombreux clients publics et privés pour des projets de petite et
-                grande envergure.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {clients.map((client, index) => (
-              <div
-                key={index}
-                className="bg-ocean-50 p-4 rounded border border-ocean-100 text-center"
-                data-aos="fade-up"
-                data-aos-delay={index * 50}
-              >
-                <p className="text-ocean-700 font-medium">{client}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .slider {
+          overflow: hidden;
+          padding: 20px 0;
+          background: transparent;
+          width: 100%;
+        }
+
+        .slide-track {
+          display: flex;
+          gap: 32px;
+          width: calc(250px * ${clients.length} * 2);
+          animation: scroll 40s linear infinite;
+        }
+
+        .slide {
+          flex-shrink: 0;
+          width: 200px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-250px * ${clients.length}));
+          }
+        }
+
+        .slide-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 };

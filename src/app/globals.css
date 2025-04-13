@@ -190,4 +190,21 @@
   .btn-outline-ocean {
     @apply border-2 border-ocean-500 text-ocean-600 hover:bg-ocean-500 hover:text-white px-6 py-3 rounded-md transition-colors duration-300 inline-flex items-center justify-center gap-2 font-medium;
   }
+
+  /* Admin Button Styles */
+  .btn-ocean {
+    @apply px-4 py-2 bg-ocean-600 text-white rounded-lg hover:bg-ocean-700 transition-colors;
+  }
+
+  .btn-ocean-light {
+    @apply px-4 py-2 bg-ocean-50 text-ocean-600 rounded-lg hover:bg-ocean-100 transition-colors;
+  }
+
+  .btn-success-light {
+    @apply px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors;
+  }
+
+  .btn-gray-light {
+    @apply px-4 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors;
+  }
 }

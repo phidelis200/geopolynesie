@@ -6,6 +6,7 @@ import {
   Compass,
   Ruler,
   FileText,
+  Waves,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -22,15 +23,7 @@ const Services = () => {
       title: "Topographie",
       description:
         "Relevés topographiques terrestres, modélisations 3D et cartographie précise pour projets d'aménagement et de construction.",
-      icon: <Map size={40} className="text-ocean-500" />,
       link: "/services#topographie",
-    },
-    {
-      title: "Bathymétrie",
-      description:
-        "Mesure des profondeurs et relief des fonds marins à l'aide de technologies mono et multi-faisceaux de haute précision.",
-      icon: <Compass size={40} className="text-ocean-500" />,
-      link: "/services#bathymetrie",
     },
     {
       title: "Cartographie",
@@ -46,6 +39,20 @@ const Services = () => {
       icon: <Ruler size={40} className="text-ocean-500" />,
       link: "/services#geodesie",
     },
+    {
+      title: "Courantologie",
+      description:
+        "Mesures et analyses des courants marins à l’aide de profileurs acoustiques pour comprendre les dynamiques océaniques.",
+      icon: <Compass size={40} className="text-ocean-500" />,
+      link: "/services#courantologie",
+    },
+    {
+      title: "Marégraphie",
+      description:
+        "Études de marées, mesures de niveaux d'eau et modélisation des marées.",
+      icon: <Waves size={40} className="text-ocean-500" />,
+      link: "/services#maregraphie",
+    },
   ];
 
   return (
@@ -60,7 +67,7 @@ const Services = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <div
               key={index}
@@ -86,7 +93,7 @@ const Services = () => {
         </div>
 
         <div className="text-center mt-12" data-aos="fade-up">
-          <Link href="/services" className="btn-ocean">
+          <Link href="/services" className="btn-ocean px-6 py-3">
             Tous nos services <ArrowRight size={20} />
           </Link>
         </div>

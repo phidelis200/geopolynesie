@@ -63,6 +63,14 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
+                  href="/"
+                  className="text-ocean-100 hover:text-white transition-colors duration-300 flex items-center"
+                >
+                  <span className="mr-2">›</span> Accueil
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/services"
                   className="text-ocean-100 hover:text-white transition-colors duration-300 flex items-center"
                 >
@@ -134,18 +142,26 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/services#bathymetrie"
-                  className="text-ocean-100 hover:text-white transition-colors duration-300 flex items-center"
-                >
-                  <span className="mr-2">›</span> Bathymétrie
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/services#geodesie"
                   className="text-ocean-100 hover:text-white transition-colors duration-300 flex items-center"
                 >
                   <span className="mr-2">›</span> Géodésie
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services#courantologie"
+                  className="text-ocean-100 hover:text-white transition-colors duration-300 flex items-center"
+                >
+                  <span className="mr-2">›</span> Courantologie
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services#maregraphie"
+                  className="text-ocean-100 hover:text-white transition-colors duration-300 flex items-center"
+                >
+                  <span className="mr-2">›</span> Marégraphie
                 </Link>
               </li>
             </ul>
@@ -160,25 +176,35 @@ const Footer = () => {
                   size={20}
                   className="text-ocean-300 mt-1 flex-shrink-0"
                 />
-                <span className="text-ocean-100">Polynésie Française</span>
+                <span className="text-ocean-100">
+                  Polynésie Française et Madagascar
+                </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone size={20} className="text-ocean-300 flex-shrink-0" />
                 <a
-                  href="tel:+689123456"
+                  href="tel:+68987765849"
                   className="text-ocean-100 hover:text-white transition-colors duration-300"
                 >
-                  +689 12 34 56
+                  +689 87765849
                 </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail size={20} className="text-ocean-300 flex-shrink-0" />
-                <a
-                  href="mailto:contact@geopolynesie.com"
-                  className="text-ocean-100 hover:text-white transition-colors duration-300"
-                >
-                  contact@geopolynesie.com
-                </a>
+                <div className="flex flex-col">
+                  <a
+                    href="mailto:geopolynesie@gmail.com"
+                    className="text-ocean-100 hover:text-white transition-colors duration-300"
+                  >
+                    geopolynesie@gmail.com
+                  </a>
+                  <a
+                    href="mailto:surveyinternational.mada@gmail.com"
+                    className="text-ocean-100 hover:text-white transition-colors duration-300"
+                  >
+                    surveyinternational.mada@gmail.com
+                  </a>
+                </div>
               </li>
               <li className="flex items-center space-x-3">
                 <Globe size={20} className="text-ocean-300 flex-shrink-0" />

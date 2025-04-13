@@ -9,7 +9,7 @@ const News = () => {
     image: string;
     title: string;
     date: string;
-    readTime: string;
+    content: string;
     summary: string;
     slug: string;
   }
@@ -35,6 +35,18 @@ const News = () => {
 
     fetchNews();
   }, []);
+
+  const truncateHTML = (html: string, maxLength: number) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    const text = div.textContent || div.innerText || "";
+    if (text.length <= maxLength) return html;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  const createMarkup = (html: string) => {
+    return { __html: html };
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -83,17 +95,16 @@ const News = () => {
                           {new Date(item.date).toLocaleDateString("fr-FR")}
                         </span>
                       </div>
-                      <div className="flex items-center">
-                        <Clock size={14} className="mr-1" />
-                        <span>{item.readTime}</span>
-                      </div>
                     </div>
                     <h4 className="text-lg font-bold mb-3 text-ocean-800">
                       {item.title}
                     </h4>
-                    <p className="text-gray-600 mb-4 flex-grow">
-                      {item.summary}
-                    </p>
+                    <div
+                      className="text-gray-600 mb-4 flex-grow prose"
+                      dangerouslySetInnerHTML={createMarkup(
+                        truncateHTML(item.content, 150)
+                      )}
+                    />
                     <Link
                       href={`/news/${item.slug}`}
                       className="mt-auto text-ocean-600 font-medium hover:text-ocean-800 inline-flex items-center"

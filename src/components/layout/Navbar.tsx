@@ -10,6 +10,9 @@ import Link from "next/link";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [currentEmail, setCurrentEmail] = useState("geopolynesie@gmail.com");
+  const [currentLocation, setCurrentLocation] = useState("Polynésie Française");
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const pathname = usePathname();
   const isMobile = useIsMobile();
 
@@ -42,6 +45,28 @@ const Navbar = () => {
     setIsMenuOpen(false);
   }, [pathname]);
 
+  // Email and location animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentEmail((current) =>
+          current === "geopolynesie@gmail.com"
+            ? "surveyinternational.mada@gmail.com"
+            : "geopolynesie@gmail.com"
+        );
+        setCurrentLocation((current) =>
+          current === "Polynésie Française"
+            ? "Madagascar"
+            : "Polynésie Française"
+        );
+        setIsTransitioning(false);
+      }, 300);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <header className="fixed top-0 w-full z-50 transition-all duration-300">
       {/* Top contact bar */}
@@ -50,25 +75,33 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             <div className="flex items-center gap-1.5">
               <MapPin size={14} className="flex-shrink-0" />
-              <span className="whitespace-nowrap">Polynésie Française</span>
+              <span
+                className={`whitespace-nowrap transition-opacity duration-300 ${
+                  isTransitioning ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                {currentLocation}
+              </span>
             </div>
             <div className="flex items-center gap-1.5">
               <Mail size={14} className="flex-shrink-0" />
               <a
-                href="mailto:contact@geopolynesie.com"
-                className="hover:underline"
+                href={`mailto:${currentEmail}`}
+                className={`hover:underline transition-opacity duration-300 ${
+                  isTransitioning ? "opacity-0" : "opacity-100"
+                }`}
               >
-                contact@geopolynesie.com
+                {currentEmail}
               </a>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
             <Phone size={14} className="flex-shrink-0" />
             <a
-              href="tel:+689123456"
+              href="tel:+68987765849"
               className="hover:underline whitespace-nowrap"
             >
-              +689 12 34 56
+              +689 87765849
             </a>
           </div>
         </div>

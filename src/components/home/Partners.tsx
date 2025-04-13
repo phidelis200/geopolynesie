@@ -1,57 +1,145 @@
-import React from "react";
-import { Building } from "lucide-react";
+"use client";
+
+import React, { useState } from "react";
+import { Building2, MapPin, Anchor, Waves } from "lucide-react";
 
 const Partners = () => {
-  const partners = [
+  const [activeTab, setActiveTab] = useState(0);
+
+  const partnerCategories = [
     {
-      name: "SHOM",
-      description: "Service Hydrographique et Océanographique de la Marine",
+      title: "Bureaux d'études & Ingénierie",
+      icon: Building2,
+      partners: [
+        {
+          name: "GEDES",
+          location: "Côte d'Ivoire",
+          description: "Bureau d'étude technique & ingénierie",
+        },
+        { name: "PTPU", location: "Polynésie française" },
+        { name: "ARVAM-PARETO", location: "Réunion" },
+        { name: "Tonkin et Taylor", location: "Nouvelle Zélande" },
+        { name: "BEST PACIFIC", location: "Polynésie française" },
+        { name: "CREOCEAN", location: "Polynésie française" },
+        { name: "EGIS", location: "Polynésie française" },
+        { name: "FUTURMAP", location: "Madagascar" },
+      ],
     },
-    { name: "AFHy", description: "Association Francophone d'Hydrographie" },
-    { name: "MSF", description: "Marins Sans Frontières" },
-    { name: "FEPSM", description: "Fédération Polynésienne de Secours en Mer" },
-    { name: "OHI", description: "Organisation Hydrographique Internationale" },
-    { name: "FIG", description: "Fédération Internationale des Géomètres" },
+    {
+      title: "Cabinets de Géomètre-Topographe",
+      icon: MapPin,
+      partners: [
+        {
+          name: "Cabinets Tahiti",
+          location: "Polynésie française",
+          description: "Plusieurs cabinets partenaires",
+        },
+        { name: "Cabinet Hydrographie", location: "Nouvelle Calédonie" },
+        { name: "Cabinet Topographie", location: "Nouvelle Calédonie" },
+        { name: "Cabinet Topographie", location: "La Réunion" },
+        {
+          name: "Cabinet Topographie",
+          location: "Madagascar",
+          description: "Basé à Antananarivo",
+        },
+      ],
+    },
+    {
+      title: "Travaux Sous-marins",
+      icon: Anchor,
+      partners: [
+        {
+          name: "Entreprises locales",
+          location: "Polynésie française",
+          description: "3 entreprises partenaires",
+        },
+        { name: "Entreprise Océan Indien", location: "Océan Indien" },
+      ],
+    },
+    {
+      title: "Services Spécialisés",
+      icon: Waves,
+      partners: [
+        {
+          name: "LIDAR aéroporté",
+          description: "Bureau spécialisé dans les levés",
+        },
+        { name: "Club de plongée Raiatea", location: "Polynésie française" },
+        {
+          name: "Bathymétrie",
+          location: "France",
+          description: "2 entreprises spécialisées",
+        },
+      ],
+    },
   ];
 
   return (
     <section id="partners" className="py-16 md:py-24">
       <div className="container max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16" data-aos="fade-up">
+        <div className="text-center mb-8" data-aos="fade-up">
           <h2 className="section-title">Nos Partenaires</h2>
           <p className="section-subtitle">
-            Géopolynésie collabore avec des organismes reconnus dans le domaine
-            de l'hydrographie, de la cartographie et de la sécurité maritime.
+            Notre réseau de partenaires à travers l'Océanie et l'Océan Indien
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {partners.map((partner, index) => (
+        <div className="flex overflow-x-auto mb-6 -mx-4 px-4 py-2 scrollbar-hide">
+          <div className="flex space-x-2 mx-auto">
+            {partnerCategories.map((category, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveTab(index)}
+                className={`flex items-center cursor-pointer px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
+                  activeTab === index
+                    ? "bg-ocean-600 text-white"
+                    : "bg-gray-100 hover:bg-gray-200"
+                }`}
+              >
+                <category.icon size={18} className="mr-2" />
+                {category.title}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {partnerCategories[activeTab].partners.map((partner, index) => (
             <div
               key={index}
-              className="border rounded-lg p-6 flex flex-col items-center text-center hover:bg-ocean-50 transition-colors duration-300"
+              className="bg-white border rounded-lg p-4 transition-shadow"
               data-aos="fade-up"
-              data-aos-delay={index * 100}
+              data-aos-delay={index * 50}
             >
-              <div className="mb-4 p-3 bg-ocean-100 rounded-full">
-                <Building size={30} className="text-ocean-700" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-ocean-800">
+              <h4 className="font-bold text-lg text-ocean-800">
                 {partner.name}
-              </h3>
-              <p className="text-gray-600">{partner.description}</p>
+              </h4>
+              {partner.location && (
+                <p className="text-sm text-ocean-600">{partner.location}</p>
+              )}
+              {partner.description && (
+                <p className="text-sm text-gray-600 mt-1">
+                  {partner.description}
+                </p>
+              )}
             </div>
           ))}
         </div>
 
-        <div className="mt-16 p-6 bg-ocean-100 rounded-lg" data-aos="fade-up">
-          <p className="text-center text-gray-700">
-            <span className="font-semibold">
-              Vous êtes un organisme dans le domaine maritime ou topographique?
-            </span>
+        {partnerCategories[activeTab].partners.length === 0 && (
+          <div className="text-center text-gray-500 py-8">
+            Aucun partenaire trouvé pour votre recherche
+          </div>
+        )}
+
+        <div
+          className="mt-12 p-4 bg-ocean-50 rounded-lg text-center"
+          data-aos="fade-up"
+        >
+          <p className="text-gray-700">
+            <span className="font-semibold">Intéressé par un partenariat?</span>
             <br />
-            Nous sommes ouverts à des partenariats stratégiques pour développer
-            des projets innovants.
+            Contactez-nous pour explorer les possibilités de collaboration.
           </p>
         </div>
       </div>
