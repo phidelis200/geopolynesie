@@ -80,7 +80,6 @@ export async function POST(req: Request) {
         image,
         status,
         readTime,
-        summary: content.substring(0, 200), // First 200 characters as summary
         authorId: isValidToken.id as string,
       },
     });
