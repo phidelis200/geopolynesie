@@ -1,16 +1,13 @@
+"use client";
 import { Plus } from "lucide-react";
 import { NewsTable } from "./news-table";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
-interface SearchParams {
-  page?: string;
-}
+export default function AdminNews() {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
 
-export default function AdminNews({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -24,7 +21,7 @@ export default function AdminNews({
           <Plus size={20} /> Nouvelle Actualité
         </Link>
       </div>
-      <NewsTable initialPage={Number(searchParams.page) || 1} />
+      <NewsTable initialPage={page} />
     </div>
   );
 }
