@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function AdminNews({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   return (
     <div>
