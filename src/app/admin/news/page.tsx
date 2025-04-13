@@ -9,7 +9,7 @@ interface SearchParams {
 export default function AdminNews({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: { page?: string };
 }) {
   return (
     <div>
