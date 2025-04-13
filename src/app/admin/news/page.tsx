@@ -6,7 +6,7 @@ interface SearchParams {
   page?: string;
 }
 
-export default async function AdminNews({
+export default function AdminNews({
   searchParams,
 }: {
   searchParams: SearchParams;
