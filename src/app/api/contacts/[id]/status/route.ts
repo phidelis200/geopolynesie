@@ -1,15 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH() {
   try {
-    const { status } = await request.json();
+    const { id, status } = await request.json();
 
     const contact = await prisma.contact.update({
-      where: { id: params.id },
+      where: { id: id },
       data: { status },
     });
 
