@@ -1,27 +1,26 @@
-"use client";
-import { Plus } from "lucide-react";
-import { NewsTable } from "./news-table";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { NextResponse, NextRequest } from "next/server";
 
-export default function AdminNews() {
-  const searchParams = useSearchParams();
-  const page = Number(searchParams.get("page")) || 1;
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { message } = await request.json();
 
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">
-          Gestion des Actualités
-        </h1>
-        <Link
-          href="/admin/news/create"
-          className="btn-ocean flex items-center gap-2"
-        >
-          <Plus size={20} /> Nouvelle Actualité
-        </Link>
-      </div>
-      <NewsTable initialPage={page} />
-    </div>
-  );
+    // Here you would typically send the email
+    // For now, we'll just update the status
+    const contact = await prisma.contact.update({
+      where: { id: params.id },
+      data: { status: "PROCESSED" },
+    });
+
+    return NextResponse.json(contact);
+  } catch (error) {
+    console.error("Failed to send reply:", error);
+    return NextResponse.json(
+      { error: "Failed to send reply" },
+      { status: 500 }
+    );
+  }
 }
