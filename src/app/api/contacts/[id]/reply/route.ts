@@ -1,9 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> } 
+) {
   try {
-    const { id, message } = await request.json();
+    const { message } = await request.json();
+    const { id } = await params;
 
     // Here you would typically send the email
     // For now, we'll just update the status
