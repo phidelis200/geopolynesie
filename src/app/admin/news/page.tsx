@@ -1,11 +1,17 @@
+"use client";
+
 import { Plus } from "lucide-react";
 import { NewsTable } from "./news-table";
 import Link from "next/link";
 
-export default function AdminNews({
+interface SearchParams {
+  page?: string;
+}
+
+export default async function AdminNews({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: SearchParams;
 }) {
   return (
     <div>
