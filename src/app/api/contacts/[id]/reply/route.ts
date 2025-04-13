@@ -1,17 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json();
+    const { id, message } = await request.json();
 
     // Here you would typically send the email
     // For now, we'll just update the status
     const contact = await prisma.contact.update({
-      where: { id: params.id },
+      where: { id: id },
       data: { status: "PROCESSED" },
     });
 
