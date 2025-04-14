@@ -19,7 +19,7 @@ const Clients = () => {
     },
     {
       content:
-        "Nous faisons confiance à Géopolynésie depuis plus de 10 ans pour tous nos travaux d'hydrographie. Leur connaissance du terrain polynésien est inégalée.",
+        "Nous faisons confiance à Géopolynésie depuis plus de 20 ans pour tous nos travaux d'hydrographie. Leur connaissance du terrain polynésien est inégalée.",
       author: "Ministère de l'Équipement",
       position: "Polynésie Française",
     },

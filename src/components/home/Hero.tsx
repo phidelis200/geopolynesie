@@ -10,8 +10,9 @@ const Hero = () => {
   const [isPaused, setIsPaused] = React.useState(false);
   const images = [
     "/assets/image-8.jpg",
-    "/assets/image-2.jpg",
+    "/assets/image4.jpg",
     "/assets/image-9.jpg",
+    "/assets/image7.jpg",
     "/assets/image-4.jpg",
   ];
 
