@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
   },
   assetPrefix: process.env.NODE_ENV === "production" ? "/" : "",
   reactStrictMode: true,
-  turbopack: false,
 };
 
 export default nextConfig;
