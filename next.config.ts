@@ -6,12 +6,12 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  assetPrefix: process.env.NODE_ENV === "production" ? "." : "",
+  assetPrefix: process.env.NODE_ENV === "production" ? "/" : "",
   reactStrictMode: true,
-
-  // facultatif : forcer webpack si Turbopack plante
   experimental: {
-    turbo: false,
+    turbo: {
+      loaders: {},
+    },
   },
 };
 
