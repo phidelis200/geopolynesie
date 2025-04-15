@@ -2,14 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  output: "export",
+  optimizeCss: true,
+  trailingSlash: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
+    unoptimized: true,
   },
+  assetPrefix: process.env.NODE_ENV === "production" ? "." : "",
+  reactStrictMode: true,
 };
 
 export default nextConfig;
