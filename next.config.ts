@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   assetPrefix: process.env.NODE_ENV === "production" ? "/" : "",
-  reactStrictMode: true
+  reactStrictMode: true,
+  turbopack: false,
 };
 
 export default nextConfig;
