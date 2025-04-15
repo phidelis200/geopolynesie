@@ -8,11 +8,6 @@ const nextConfig: NextConfig = {
   },
   assetPrefix: process.env.NODE_ENV === "production" ? "/" : "",
   reactStrictMode: true,
-  experimental: {
-    turbo: {
-      loaders: {},
-    },
-  },
 };
 
 export default nextConfig;
