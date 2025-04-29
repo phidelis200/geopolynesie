@@ -9,10 +9,9 @@ import Services from '@/components/home/Services';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import Provider from '@/provider';
-import { NewsHomePage } from '@/types/type';
 import { Head } from '@inertiajs/react';
 
-export default function HomePage({ newsItems }: NewsHomePage) {
+export default function HomePage() {
     return (
         <>
             <Head>
@@ -58,7 +57,7 @@ export default function HomePage({ newsItems }: NewsHomePage) {
                         <GeographicRange />
                         <Gallery />
                         <Clients />
-                        <News newsItems={newsItems} />
+                        <News />
                     </main>
                     <Footer />
                 </div>

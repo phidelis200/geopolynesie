@@ -1,8 +1,14 @@
 import { NewsHomePage } from '@/types';
-import { Link } from '@inertiajs/react';
+import { PageProps } from '@inertiajs/core';
+import { Link, usePage } from '@inertiajs/react';
 import { ArrowRight, Calendar } from 'lucide-react';
 
-const News = ({ newsItems }: NewsHomePage) => {
+interface NewsProps extends PageProps {
+    newsItems: NewsHomePage['newsItems'];
+}
+
+const News = () => {
+    const { newsItems } = usePage<NewsProps>().props;
     const truncateHTML = (html: string, maxLength: number) => {
         const div = document.createElement('div');
         div.innerHTML = html;
