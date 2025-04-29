@@ -22,7 +22,7 @@ class NewsController extends Controller
             ->take(3)
             ->get();
 
-        return Inertia::render('home', [
+        return Inertia::render('welcome', [
             'newsItems' => $latestNews
         ]);
     }
