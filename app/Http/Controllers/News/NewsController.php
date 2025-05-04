@@ -140,10 +140,10 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'required|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:PUBLISH,DRAFT,ARCHIVED',
         ]);
-
+        
         try {
             $news = new News();
             $news->title = $request->title;
@@ -154,15 +154,17 @@ class NewsController extends Controller
             $news->author_id = auth()->id();
             $news->date = now();
             $news->read_time = ceil(str_word_count(strip_tags($request->content)) / 200);
-
+        
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('public/news');
-                $news->image = Storage::url($path);
+                $fileName = time() . '_' . Str::random(10) . '.' . $request->file('image')->getClientOriginalExtension();
+                $path = $request->file('image')->storeAs('news', $fileName, 'public');
+                $news->image = Storage::disk('public')->url($path);
             }
-
+        
             $news->save();
-
+        
             return redirect()->back()->with('success', 'Journal créé avec succès');
+        
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la création du journal');
         }
@@ -174,12 +176,12 @@ class NewsController extends Controller
     public function update(Request $request, $slug)
     {
         $news = News::where('slug', $slug)->firstOrFail();
-        
+
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'required|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:PUBLISH,DRAFT,ARCHIVED',
         ]);
 
@@ -192,22 +194,22 @@ class NewsController extends Controller
             $news->read_time = ceil(str_word_count(strip_tags($request->content)) / 200);
 
             if ($request->hasFile('image')) {
-                // Delete old image if exists
+                // Delete old image
                 if ($news->image) {
-                    $oldPath = str_replace('/storage/', 'public/news', $news->image);
-                    if (Storage::exists($oldPath)) {
-                        Storage::delete($oldPath);
-                    }
+                    $oldImagePath = str_replace('/storage/', '', $news->image);
+                    Storage::disk('public')->delete($oldImagePath);
                 }
 
                 // Store new image
-                $path = $request->file('image')->store('public/news');
-                $news->image = Storage::url($path);
+                $fileName = time() . '_' . Str::random(10) . '.' . $request->file('image')->getClientOriginalExtension();
+                $path = $request->file('image')->storeAs('news', $fileName, 'public');
+                $news->image = Storage::disk('public')->url($path);
             }
 
             $news->save();
 
             return redirect()->back()->with('success', 'Journal modifié avec succès');
+
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la modification du journal');
         }

@@ -6,7 +6,6 @@ const Hero = () => {
     const [activeImage, setActiveImage] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const images = ['/assets/image-8.jpg', '/assets/image4.jpg', '/assets/image-9.jpg', '/assets/image7.jpg', '/assets/image-4.jpg'];
-
     useEffect(() => {
         if (isPaused) return;
 

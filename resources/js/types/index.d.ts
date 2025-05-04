@@ -120,5 +120,11 @@ export interface Contact {
     subject: string;
     message: string;
     status: 'PENDING' | 'ANSWERED';
+    answer_message: string;
+    answered_at: string;
     created_at: string;
+}
+
+export interface ContactProps {
+    contacts: PaginatedData<Contact>;
 }

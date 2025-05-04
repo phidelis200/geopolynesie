@@ -10,7 +10,7 @@ interface NewsPageProps extends PageProps {
 }
 
 const News = () => {
-    const { newsItems, recentPublications } = usePage<NewsPageProps>().props; // Add recentPublications
+    const { newsItems, recentPublications } = usePage<NewsPageProps>().props;
     const { url } = usePage();
     const searchParams = new URLSearchParams(url.split('?')[1]);
     const categoryParam = searchParams.get('category');

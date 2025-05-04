@@ -32,11 +32,13 @@ const ContactUs = () => {
         setErrors({});
 
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch('/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
                 },
+                credentials: 'include',
                 body: JSON.stringify(formData),
             });
 
@@ -60,7 +62,7 @@ const ContactUs = () => {
                 subject: '',
                 message: '',
             });
-        } catch (error) {
+        } catch (error: any) {
             toast("Une erreur est survenue lors de l'envoi du message.");
         } finally {
             setIsSubmitting(false);
@@ -71,8 +73,8 @@ const ContactUs = () => {
         {
             icon: <MapPin size={24} className="text-ocean-500" />,
             title: 'Adresse',
-            details_1: 'Polynésie Française',
-            details_2: 'Madagascar',
+            details_1: 'BP 44041',
+            details_2: '98713 Papeete, Polynésie Française',
         },
         {
             icon: <Phone size={24} className="text-ocean-500" />,

@@ -9,6 +9,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
@@ -46,6 +47,7 @@ export default function News() {
         status: 'DRAFT',
         image: null as File | null,
     });
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const handleAddJournal = () => {
         setIsAddDrawerOpen(true);
@@ -60,6 +62,7 @@ export default function News() {
             status: journal.status,
             image: null,
         });
+        setImagePreview(journal.image || null);
         setIsEditDrawerOpen(true);
     };
 
@@ -101,6 +104,7 @@ export default function News() {
                     status: 'DRAFT',
                     image: null,
                 });
+                setImagePreview(null);
             },
         });
     };
@@ -131,6 +135,7 @@ export default function News() {
                     status: 'DRAFT',
                     image: null,
                 });
+                setImagePreview(null);
             },
         });
     };
@@ -144,6 +149,31 @@ export default function News() {
                 setSelectedJournal(null);
             },
         });
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setFormData({ ...formData, image: file });
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setImagePreview(null);
+        }
+    };
+
+    const handleAddDrawerClose = () => {
+        setIsAddDrawerOpen(false);
+        setImagePreview(null);
+    };
+
+    const handleEditDrawerClose = () => {
+        setIsEditDrawerOpen(false);
+        setImagePreview(null);
     };
 
     const categories = ['Projets', 'Partenariats', 'Événements', 'Équipements', 'Formation'];
@@ -190,7 +220,7 @@ export default function News() {
                 </div>
 
                 {/* Table */}
-                <div className="overflow-x-auto rounded-lg border">
+                <Card className="overflow-x-auto rounded-lg border">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -254,7 +284,7 @@ export default function News() {
                             ))}
                         </TableBody>
                     </Table>
-                </div>
+                </Card>
 
                 {/* Add Journal Drawer */}
                 <Sheet open={isAddDrawerOpen} onOpenChange={setIsAddDrawerOpen}>
@@ -263,7 +293,7 @@ export default function News() {
                             <SheetTitle>Ajouter un nouveau journal</SheetTitle>
                             <SheetDescription>Créez un nouveau journal en remplissant les informations ci-dessous.</SheetDescription>
                         </SheetHeader>
-                        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+                        <form onSubmit={handleSubmit} className="mt-6 space-y-4 p-4">
                             <div>
                                 <Label htmlFor="title">Titre</Label>
                                 <Input
@@ -309,19 +339,19 @@ export default function News() {
                             </div>
                             <div>
                                 <Label htmlFor="image">Image</Label>
-                                <Input
-                                    id="image"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
-                                />
+                                <Input id="image" type="file" accept="image/*" onChange={handleImageChange} />
+                                {imagePreview && (
+                                    <div className="mt-2">
+                                        <img src={imagePreview} alt="Preview" className="h-40 w-auto rounded-md object-cover" />
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <Label htmlFor="content">Contenu</Label>
                                 <RichTextEditor value={formData.content} onChange={(content) => setFormData({ ...formData, content })} />
                             </div>
                             <div className="flex justify-end gap-2">
-                                <Button className="cursor-pointer" variant="outline" type="button" onClick={() => setIsAddDrawerOpen(false)}>
+                                <Button className="cursor-pointer" variant="outline" type="button" onClick={handleAddDrawerClose}>
                                     Annuler
                                 </Button>
                                 <Button type="submit" className="bg-ocean-600 hover:bg-ocean-700 cursor-pointer">
@@ -339,7 +369,7 @@ export default function News() {
                             <SheetTitle>Modifier un journal</SheetTitle>
                             <SheetDescription>Modifiez les informations du journal.</SheetDescription>
                         </SheetHeader>
-                        <form onSubmit={handleEditSubmit} className="mt-6 space-y-4">
+                        <form onSubmit={handleEditSubmit} className="mt-6 space-y-4 p-4">
                             <div>
                                 <Label htmlFor="edit-title">Titre</Label>
                                 <Input
@@ -385,15 +415,10 @@ export default function News() {
                             </div>
                             <div>
                                 <Label htmlFor="edit-image">Image</Label>
-                                <Input
-                                    id="edit-image"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
-                                />
-                                {selectedJournal?.image && (
+                                <Input id="edit-image" type="file" accept="image/*" onChange={handleImageChange} />
+                                {imagePreview && (
                                     <div className="mt-2">
-                                        <img src={selectedJournal.image} alt="Current" className="h-20 w-auto rounded-md object-cover" />
+                                        <img src={imagePreview} alt="Preview" className="h-40 w-auto rounded-md object-cover" />
                                     </div>
                                 )}
                             </div>
@@ -402,7 +427,7 @@ export default function News() {
                                 <RichTextEditor value={formData.content} onChange={(content) => setFormData({ ...formData, content })} />
                             </div>
                             <div className="flex justify-end gap-2">
-                                <Button variant="outline" className="cursor-pointer" type="button" onClick={() => setIsEditDrawerOpen(false)}>
+                                <Button variant="outline" className="cursor-pointer" type="button" onClick={handleEditDrawerClose}>
                                     Annuler
                                 </Button>
                                 <Button type="submit" className="bg-ocean-600 hover:bg-ocean-700 cursor-pointer">

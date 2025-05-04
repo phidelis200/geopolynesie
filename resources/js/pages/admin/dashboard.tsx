@@ -86,7 +86,7 @@ export default function Dashboard() {
                         <div className="col-span-full text-center text-red-500">{error}</div>
                     ) : (
                         stats.map((stat, index) => (
-                            <Card key={index} className="flex flex-col gap-4 rounded-2xl border-none p-6 shadow-sm transition hover:shadow-md">
+                            <Card key={index} className="flex flex-col gap-4 rounded-2xl border p-6 shadow-none transition hover:shadow-sm">
                                 <div className="flex items-center justify-center">
                                     <div className={`${stat.color} rounded-full p-3 text-white`}>
                                         <stat.icon size={28} />
@@ -102,7 +102,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Chart Card */}
-                <Card className="rounded-2xl border-none p-6 shadow-sm">
+                <Card className="rounded-2xl p-6 shadow-none">
                     <h2 className="mb-4 text-xl font-semibold">Statistiques des visites</h2>
                     <div className="h-[300px] overflow-hidden">
                         {' '}
