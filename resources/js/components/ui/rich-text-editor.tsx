@@ -1,6 +1,17 @@
-import { useQuill } from 'react-quilljs';
-import 'quill/dist/quill.snow.css';
-import { useEffect, useRef } from 'react';
+import TiptapEditor, {BaseKit} from 'reactjs-tiptap-editor';
+import { Blockquote } from 'reactjs-tiptap-editor/blockquote';
+import { Bold } from 'reactjs-tiptap-editor/bold';
+import { BulletList } from 'reactjs-tiptap-editor/bulletlist';
+import { Heading } from 'reactjs-tiptap-editor/heading';
+import { Image } from 'reactjs-tiptap-editor/image';
+import { Italic } from 'reactjs-tiptap-editor/italic';
+import { Link } from 'reactjs-tiptap-editor/link';
+import { ListItem } from 'reactjs-tiptap-editor/listitem';
+import { OrderedList } from 'reactjs-tiptap-editor/orderedlist';
+import { Strike } from 'reactjs-tiptap-editor/strike';
+import { TextUnderline } from 'reactjs-tiptap-editor/textunderline';
+import 'reactjs-tiptap-editor/style.css';
+import 'react-image-crop/dist/ReactCrop.css';
 
 interface RichTextEditorProps {
   value: string;
@@ -8,37 +19,37 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
-  const { quill, quillRef } = useQuill();
-  const prevValueRef = useRef<string>(value);
+  const extensions = [
+    BaseKit.configure({
+      placeholder: {
+        placeholder: 'Ecrire ici description...',
+      },
+      characterCount: false,
+      hardBreak: false,
 
-  useEffect(() => {
-    if (quill && value && prevValueRef.current !== value) {
-      quill.clipboard.dangerouslyPasteHTML(value);
-      prevValueRef.current = value;
-    }
-  }, [quill, value]);
+    }),
+    Bold,
+    Italic,
+    Strike,
+    TextUnderline,
+    Heading,
+    Blockquote,
+    BulletList,
+    OrderedList,
+    ListItem,
+    Link,
+    Image,
+  ];
 
-  useEffect(() => {
-    if (quill) {
-      const handler = () => {
-        const html = quill.root.innerHTML;
-        if (html !== prevValueRef.current) {
-          prevValueRef.current = html;
-          onChange(html);
-        }
-      };
-
-      quill.on('text-change', handler);
-
-      return () => {
-        quill.off('text-change', handler);
-      };
-    }
-  }, [quill, onChange]);
+  const dark = localStorage.getItem('appearance') === 'dark';
 
   return (
-    <div>
-      <div ref={quillRef} />
-    </div>
+    <TiptapEditor
+      output="html"
+      content={value}
+      onChangeContent={onChange}
+      extensions={extensions}
+      dark={dark}
+    />
   );
 }

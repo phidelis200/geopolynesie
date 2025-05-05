@@ -73,24 +73,24 @@ const ContactUs = () => {
         {
             icon: <MapPin size={24} className="text-ocean-500" />,
             title: 'Adresse',
-            details_1: 'BP 44041',
-            details_2: '98713 Papeete, Polynésie Française',
+            details_1: '🔘 BP 44041 / 98713 Papeete, Polynésie Française',
+            details_2: '🔘 Madagascar',
         },
         {
             icon: <Phone size={24} className="text-ocean-500" />,
             title: 'Téléphone',
-            details_1: '+689 87765849',
+            details_1: '🔘 +689 87765849',
         },
         {
             icon: <Mail size={24} className="text-ocean-500" />,
             title: 'Email',
-            details_1: 'geopolynesie@gmail.com',
-            details_2: 'surveyinternational.mada@gmail.com',
+            details_1: '🔘 geopolynesie@gmail.com',
+            details_2: '🔘 surveyinternational.mada@gmail.com',
         },
         {
             icon: <Globe size={24} className="text-ocean-500" />,
             title: 'Site Web',
-            details_1: 'www.geopolynesie.com',
+            details_1: '🔘 www.geopolynesie.com',
         },
     ];
     return (
@@ -118,9 +118,8 @@ const ContactUs = () => {
                                         <div className="mt-1 mr-4">{item.icon}</div>
                                         <div>
                                             <h3 className="mb-1 font-bold text-gray-800">{item.title}</h3>
-                                            <p className="text-gray-600">
-                                                {item.details_1} {item.details_2 && '/'} {item.details_2}
-                                            </p>
+                                            {item.details_1 && <p className="text-gray-600">{item.details_1}</p>}
+                                            {item.details_2 && <p className="text-gray-600">{item.details_2}</p>}
                                         </div>
                                     </div>
                                 ))}

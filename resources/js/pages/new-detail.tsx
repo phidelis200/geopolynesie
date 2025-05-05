@@ -115,7 +115,7 @@ export default function NewDetailPage({ newsItem, relatedNews, categories, error
                                             />
                                             <div className="p-8">
                                                 <div
-                                                    className="prose prose-ocean max-w-none text-justify text-gray-700"
+                                                    className="prose prose-ocean html-content max-w-none text-justify text-gray-700"
                                                     dangerouslySetInnerHTML={{
                                                         __html: newsItem.content,
                                                     }}
