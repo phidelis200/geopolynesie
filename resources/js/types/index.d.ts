@@ -120,8 +120,8 @@ export interface Contact {
     subject: string;
     message: string;
     status: 'PENDING' | 'ANSWERED';
-    answer_message: string;
-    answered_at: string;
+    answer_message: string | null;
+    answered_at: string | null;
     created_at: string;
 }
 

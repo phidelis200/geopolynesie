@@ -49,7 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('admin/news/{slug}', [NewsController::class, 'update'])->name('admin.news.update');
     Route::delete('admin/news/{slug}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
     
+    // Remove the old contact routes and replace with these
     Route::get('/admin/contacts', [ContactController::class, 'index'])->name('admin.contacts');
+    Route::delete('/admin/contacts/{contact}', [ContactController::class, 'destroy'])->name('admin.contacts.destroy');
 });
 
 require __DIR__.'/settings.php';

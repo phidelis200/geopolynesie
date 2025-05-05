@@ -6,6 +6,7 @@ use App\Models\Contact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ContactResponseMail extends Mailable
 {
@@ -20,7 +21,25 @@ class ContactResponseMail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.contact-response')
-            ->subject('Réponse à votre message - Géopolynésie');
+        Log::info('Building response email', [
+            'to' => $this->contact->email,
+            'content' => $this->contact->answer_message
+        ]);
+
+        return $this->from(config('mail.from.address'))
+            ->replyTo(config('mail.from.address'))
+            ->subject('Réponse à votre message - Géopolynésie')
+            ->view('emails.contact-response')
+            ->with([
+                'contact' => $this->contact
+            ]);
+    }
+
+    public function failed($exception)
+    {
+        Log::error('Mail failed to send', [
+            'error' => $exception->getMessage(),
+            'to' => $this->contact->email
+        ]);
     }
 }

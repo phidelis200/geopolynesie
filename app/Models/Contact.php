@@ -13,11 +13,6 @@ class Contact extends Model
         'status' => 'PENDING'
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -29,4 +24,10 @@ class Contact extends Model
         'answered_at',
         'status'
     ];
+
+    // Add route key binding if needed
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
 }

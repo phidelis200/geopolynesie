@@ -57,22 +57,58 @@ class ContactController extends Controller
                 'answer_message' => 'required|string'
             ]);
 
+            $htmlContent = strip_tags($validated['answer_message'], '<p><br><strong><em><ul><li><ol><h1><h2><h3><h4><h5><h6>');
+
             $contact->update([
                 'answer' => true,
-                'answer_message' => $validated['answer_message'],
+                'answer_message' => $htmlContent,
                 'answered_at' => now(),
                 'status' => 'ANSWERED'
             ]);
 
-            Mail::to($contact->email)->send(new ContactResponseMail($contact));
+            try {
+                Mail::mailer('smtp')
+                    ->to($contact->email)
+                    ->send(new ContactResponseMail($contact));
 
+                return response()->json([
+                    'message' => 'Response sent successfully',
+                    'contact' => $contact
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Mail sending failed', [
+                    'error' => $e->getMessage(),
+                    'contact_id' => $contact->id,
+                    'content' => $htmlContent
+                ]);
+                
+                return response()->json([
+                    'message' => 'Response saved but email delivery failed: ' . $e->getMessage(),
+                    'contact' => $contact
+                ], 207);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Response handling failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
-                'message' => 'Response sent successfully',
-                'contact' => $contact
+                'message' => 'Failed to send response: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroy(Contact $contact)
+    {
+        try {
+            $contact->delete();
+            return response()->json([
+                'message' => 'Contact deleted successfully'
             ]);
         } catch (\Exception $e) {
-            \Log::error('Failed to send response email: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to send response'], 500);
+            return response()->json([
+                'message' => 'Error deleting contact'
+            ], 500);
         }
     }
 }

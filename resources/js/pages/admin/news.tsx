@@ -48,6 +48,20 @@ export default function News() {
         image: null as File | null,
     });
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const initialFormData = {
+        title: '',
+        content: '',
+        category: '',
+        status: 'DRAFT',
+        image: null as File | null,
+    };
+
+    const resetForm = () => {
+        setFormData(initialFormData);
+        setImagePreview(null);
+    };
 
     const handleAddJournal = () => {
         setIsAddDrawerOpen(true);
@@ -85,6 +99,7 @@ export default function News() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
         const form = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
@@ -97,14 +112,10 @@ export default function News() {
             forceFormData: true,
             onSuccess: () => {
                 setIsAddDrawerOpen(false);
-                setFormData({
-                    title: '',
-                    content: '',
-                    category: '',
-                    status: 'DRAFT',
-                    image: null,
-                });
-                setImagePreview(null);
+                resetForm();
+            },
+            onFinish: () => {
+                setIsSubmitting(false);
             },
         });
     };
@@ -113,6 +124,8 @@ export default function News() {
         e.preventDefault();
 
         if (!selectedJournal) return;
+
+        setIsSubmitting(true);
 
         const form = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
@@ -128,14 +141,10 @@ export default function News() {
             onSuccess: () => {
                 setIsEditDrawerOpen(false);
                 setSelectedJournal(null);
-                setFormData({
-                    title: '',
-                    content: '',
-                    category: '',
-                    status: 'DRAFT',
-                    image: null,
-                });
-                setImagePreview(null);
+                resetForm();
+            },
+            onFinish: () => {
+                setIsSubmitting(false);
             },
         });
     };
@@ -168,12 +177,12 @@ export default function News() {
 
     const handleAddDrawerClose = () => {
         setIsAddDrawerOpen(false);
-        setImagePreview(null);
+        resetForm();
     };
 
     const handleEditDrawerClose = () => {
         setIsEditDrawerOpen(false);
-        setImagePreview(null);
+        resetForm();
     };
 
     const categories = ['Projets', 'Partenariats', 'Événements', 'Équipements', 'Formation'];
@@ -354,8 +363,8 @@ export default function News() {
                                 <Button className="cursor-pointer" variant="outline" type="button" onClick={handleAddDrawerClose}>
                                     Annuler
                                 </Button>
-                                <Button type="submit" className="bg-ocean-600 hover:bg-ocean-700 cursor-pointer">
-                                    Enregistrer
+                                <Button type="submit" className="bg-ocean-600 hover:bg-ocean-700 cursor-pointer" disabled={isSubmitting}>
+                                    {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
                                 </Button>
                             </div>
                         </form>
@@ -430,8 +439,8 @@ export default function News() {
                                 <Button variant="outline" className="cursor-pointer" type="button" onClick={handleEditDrawerClose}>
                                     Annuler
                                 </Button>
-                                <Button type="submit" className="bg-ocean-600 hover:bg-ocean-700 cursor-pointer">
-                                    Enregistrer les modifications
+                                <Button type="submit" className="bg-ocean-600 hover:bg-ocean-700 cursor-pointer" disabled={isSubmitting}>
+                                    {isSubmitting ? 'Enregistrement...' : 'Enregistrer les modifications'}
                                 </Button>
                             </div>
                         </form>

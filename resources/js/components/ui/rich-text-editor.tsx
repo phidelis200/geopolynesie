@@ -23,10 +23,11 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     BaseKit.configure({
       placeholder: {
         placeholder: 'Ecrire ici description...',
+        showOnlyWhenEditable: true,
+        showOnlyCurrent: true,
       },
       characterCount: false,
-      hardBreak: false,
-
+      trailingNode: false,
     }),
     Bold,
     Italic,

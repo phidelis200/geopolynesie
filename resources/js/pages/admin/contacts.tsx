@@ -1,7 +1,8 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { Select } from '@/components/ui/select';
@@ -10,7 +11,7 @@ import { BreadcrumbItem, Contact, ContactProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import { formatDistance } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Check, Loader, MessageSquare, Search, X } from 'lucide-react';
+import { Check, Loader, MessageSquare, Search, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -28,6 +29,8 @@ export default function Contacts({ contacts }: ContactProps) {
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [response, setResponse] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const filteredContacts = useMemo(() => {
         return contactsList.filter((contact) => {
@@ -71,6 +74,31 @@ export default function Contacts({ contacts }: ContactProps) {
             toast.error("Erreur lors de l'envoi de la réponse");
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!contactToDelete) return;
+        setIsDeleting(true);
+
+        try {
+            const res = await fetch(`/admin/contacts/${contactToDelete.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                },
+            });
+
+            if (!res.ok) throw new Error('Failed to delete contact');
+
+            setContactsList((prev) => prev.filter((contact) => contact.id !== contactToDelete.id));
+            toast.success('Contact supprimé avec succès');
+            setContactToDelete(null);
+        } catch (error) {
+            console.error(error);
+            toast.error('Erreur lors de la suppression du contact');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -121,6 +149,25 @@ export default function Contacts({ contacts }: ContactProps) {
                                 <div className="mt-4">
                                     <h4 className="font-medium">{contact.subject}</h4>
                                     <p className="mt-2 text-gray-600">{contact.message}</p>
+                                    {contact.status === 'ANSWERED' && contact.answer_message && (
+                                        <Accordion type="single" collapsible className="mt-4">
+                                            <AccordionItem value="response">
+                                                <AccordionTrigger>Voir la réponse</AccordionTrigger>
+                                                <AccordionContent>
+                                                    <div className="space-y-2 pt-2">
+                                                        <div dangerouslySetInnerHTML={{ __html: contact.answer_message }} />
+                                                        <p className="text-sm text-gray-500">
+                                                            Répondu{' '}
+                                                            {formatDistance(new Date(contact.answered_at!), new Date(), {
+                                                                addSuffix: true,
+                                                                locale: fr,
+                                                            })}
+                                                        </p>
+                                                    </div>
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        </Accordion>
+                                    )}
                                 </div>
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="text-sm text-gray-500">
@@ -129,45 +176,99 @@ export default function Contacts({ contacts }: ContactProps) {
                                             locale: fr,
                                         })}
                                     </span>
-                                    {contact.status === 'PENDING' && (
+                                    <div className="flex gap-2">
+                                        {contact.status === 'PENDING' && (
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button variant="outline" className="cursor-pointer" onClick={() => setSelectedContact(contact)}>
+                                                        <MessageSquare className="mr-2 h-4 w-4" />
+                                                        Répondre
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>Répondre au message</DialogTitle>
+                                                    </DialogHeader>
+                                                    <div className="mt-4">
+                                                        <RichTextEditor value={response} onChange={(value) => setResponse(value)} />
+                                                        <div className="mt-4 flex justify-end gap-2">
+                                                            <Button
+                                                                variant="outline"
+                                                                onClick={() => {
+                                                                    setSelectedContact(null);
+                                                                    setResponse('');
+                                                                }}
+                                                                className="cursor-pointer"
+                                                            >
+                                                                <X className="mr-2 h-4 w-4" />
+                                                                Annuler
+                                                            </Button>
+                                                            <Button
+                                                                onClick={handleResponse}
+                                                                disabled={!response || isSubmitting}
+                                                                className={`bg-ocean-600 hover:bg-ocean-700 ${!response || isSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                                                            >
+                                                                {isSubmitting ? (
+                                                                    <Loader className="mr-2 h-4 w-4" />
+                                                                ) : (
+                                                                    <Check className="mr-2 h-4 w-4" />
+                                                                )}
+                                                                {isSubmitting ? 'Envoyer...' : 'Envoyer'}
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
+                                        )}
                                         <Dialog>
                                             <DialogTrigger asChild>
-                                                <Button variant="outline" onClick={() => setSelectedContact(contact)}>
-                                                    <MessageSquare className="mr-2 h-4 w-4" />
-                                                    Répondre
+                                                <Button
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    onClick={() => setContactToDelete(contact)}
+                                                    className="cursor-pointer"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader>
-                                                    <DialogTitle>Répondre au message</DialogTitle>
+                                                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                                                    <DialogDescription>
+                                                        Êtes-vous sûr de vouloir supprimer ce contact ? Cette action est irréversible.
+                                                    </DialogDescription>
                                                 </DialogHeader>
-                                                <div className="mt-4">
-                                                    <RichTextEditor value={response} onChange={(value) => setResponse(value)} />
-                                                    <div className="mt-4 flex justify-end gap-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            onClick={() => {
-                                                                setSelectedContact(null);
-                                                                setResponse('');
-                                                            }}
-                                                            className="cursor-pointer"
-                                                        >
-                                                            <X className="mr-2 h-4 w-4" />
-                                                            Annuler
-                                                        </Button>
-                                                        <Button
-                                                            onClick={handleResponse}
-                                                            disabled={!response || isSubmitting}
-                                                            className={`bg-ocean-600 hover:bg-ocean-700 ${!response || isSubmitting ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                                                        >
-                                                            {isSubmitting ? <Loader className="mr-2 h-4 w-4" /> : <Check className="mr-2 h-4 w-4" />}
-                                                            {isSubmitting ? 'Envoyer...' : 'Envoyer'}
-                                                        </Button>
-                                                    </div>
-                                                </div>
+                                                <DialogFooter className="mt-4 flex justify-end gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => setContactToDelete(null)}
+                                                        disabled={isDeleting}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        Annuler
+                                                    </Button>
+                                                    <Button
+                                                        variant="destructive"
+                                                        onClick={handleDelete}
+                                                        disabled={isDeleting}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        {isDeleting ? (
+                                                            <>
+                                                                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                                                Suppression...
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                                Supprimer
+                                                            </>
+                                                        )}
+                                                    </Button>
+                                                </DialogFooter>
                                             </DialogContent>
                                         </Dialog>
-                                    )}
+                                    </div>
                                 </div>
                             </Card>
                         ))
